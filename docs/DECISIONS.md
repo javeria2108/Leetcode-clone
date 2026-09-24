@@ -15,7 +15,8 @@ but their frameworks may need different compilation settings.
 Root lint, typecheck, test, and build scripts delegate to Turborepo.
 Each package defines the local commands it needs.
 
-Build and typecheck tasks run dependency tasks first.
+Build and typecheck tasks first build workspace dependencies so their
+compiled JavaScript and type declarations are available.
 
 Reason: keep one consistent entry point for repository checks while
 letting individual packages own their tooling.
@@ -39,3 +40,18 @@ Define runtime schemas with Zod in @app/contracts and derive
 TypeScript types from them.
 
 Reason: give the API and portal one explicit public data contract.
+
+## 005: Compiled contracts package
+
+@app/contracts exposes compiled ESM JavaScript and TypeScript declarations
+from dist through its package exports.
+
+Reason: provide one explicit entry point usable by the API and portal.
+
+## 006: Branch and pull-request workflow
+
+Make each scoped change on a separate branch created from updated master.
+Verify the change before committing, pushing, and opening a pull request.
+Merge the pull request before starting the next independent branch.
+
+Reason: keep changes small, reviewable, and documented.
