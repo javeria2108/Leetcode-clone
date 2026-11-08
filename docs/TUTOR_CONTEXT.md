@@ -6,6 +6,11 @@ rules, user terminology, or product-specific decisions.
 
 ## Tutoring mode
 
+The product is now a collaborative coding practice platform with pair
+programming and visual execution replay. Read PRODUCT_SCOPE.md alongside this
+brief and DECISIONS.md for agreed rules. Preserve the architecture below.
+Give the learner Windows cmd commands. Use scoped branches and pull requests.
+
 Act as a patient, hands-on tutor. Teach by building a small production-quality LeetCode-style
 application incrementally. For each step:
 
@@ -70,6 +75,8 @@ business modules. A likely initial module list for the new app is:
 identity       # accounts, sessions, authentication
 problems       # problem catalogue, tags, difficulty, visibility
 submissions    # code submissions, execution results, attempts
+collaboration  # private rooms, membership, shared documents, presence
+debugging      # authorized execution traces and replay access
 progress       # solved status, streaks, progress summaries
 admin          # moderation and problem authoring, only when required
 ```
@@ -136,7 +143,11 @@ API validates requests on arrival and responses before sending
 ```
 
 Contract DTOs are not database rows. Explicitly choose which fields cross the boundary; exclude
-internal flags, moderation information, hidden tests, source code, and implementation details.
+internal flags, moderation information, hidden tests, and implementation details.
+Room source code is shared only through explicitly authorized collaboration
+contracts. Execution traces must not expose hidden test inputs or private state.
+Validate real-time messages with shared contracts and enforce membership on the
+backend; a WebSocket connection alone is not authorization for every room.
 
 Create a small `@app/api-client` package. It is the frontend's only normal route to the API. It
 builds requests, carries cookies, converts safe non-2xx responses into a typed `ApiError`, and
@@ -207,12 +218,19 @@ two simultaneous requests could break a rule. Keep tests beside the code they ex
 2. Build `shared/contracts`, `backend/db`, and a tiny Nest API shell.
 3. Build one vertical slice: public problem list from database to server-rendered portal page.
 4. Add identity/session authentication, designed specifically for the new app.
-5. Add a protected "my progress" read model.
-6. Add problem detail and a submission draft flow.
-7. Introduce a submission/execution boundary using a port and fake executor first.
-8. Add real execution as a separately designed, securely isolated integration.
-9. Add admin authoring/moderation only after the core learner flow is solid.
-10. Strengthen tests, observability, background jobs, performance, and deployment decisions.
+5. Add problem detail, private two-person rooms, and invitations.
+6. Add shared editing, presence, persistence, and reconnection handling.
+7. Queue immutable code snapshots through an execution port and fake worker;
+   verify retries, idempotency, and live status updates.
+8. Add one-language execution as a separately designed, securely isolated integration.
+9. Add bounded execution traces and visual replay, then synchronized playback.
+10. Strengthen observability, load handling, security, and failure recovery.
+11. Add progress attribution and admin workflows when the learner flow needs them.
+
+Execution workers run separately from the API. Define isolation, resource limits,
+and access restrictions before running untrusted code; a default Docker container
+alone is not the security design. Trace generation uses the same execution boundary.
+Contests, rankings, and live breakpoints are deferred. See PRODUCT_SCOPE.md.
 
 ## First instruction for the new chat
 

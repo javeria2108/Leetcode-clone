@@ -55,3 +55,33 @@ Verify the change before committing, pushing, and opening a pull request.
 Merge the pull request before starting the next independent branch.
 
 Reason: keep changes small, reviewable, and documented.
+
+## 007: Initial problem storage
+
+Store problems with a UUID primary key, a unique slug, and a title.
+
+Slugs use lowercase ASCII letters and digits, with single hyphens
+separating nonempty groups. Titles must contain a non-whitespace
+character; duplicate titles are allowed.
+
+The UUID provides a stable internal reference independent of the slug.
+The public list exposes only slug and title.
+
+All problems in this initial catalogue are public. Draft and publishing
+states will be designed before private authoring is introduced.
+
+## 008: Collaborative coding practice product
+
+Focus on two learners solving problems in a private room with shared editing,
+asynchronous judging, and visual execution exploration. Defer contests and rankings.
+
+Reason: prioritize real-time coordination, concurrency, database correctness,
+isolated execution, queues, and operational reliability.
+
+Each execution uses an immutable snapshot of code, language, and execution
+inputs/configuration. Results and traces reference that snapshot even when
+the shared document changes afterward.
+
+Initial debugger planning assumption: recorded replay for one language and a
+limited set of values/data structures. Live breakpoints are deferred; the first
+language is undecided. See PRODUCT_SCOPE.md for the revised roadmap.
