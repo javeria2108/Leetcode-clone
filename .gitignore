@@ -1,3 +1,39 @@
+# Dependencies and generated output
 node_modules/
-.turbo/
 dist/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+
+# Local environment files (keep sanitized templates public)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Local assistant instructions, settings, and credentials
+AGENTS.md
+/.agents/
+/.codex/
+/.aws/
+/secrets/
+
+# Test output
+coverage/
+playwright-report/
+test-results/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Machine-specific editor and OS files
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+Desktop.ini
